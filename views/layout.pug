@@ -1,7 +1,21 @@
 doctype html
+
+mixin item(url, title)
+  li
+    a(href=url class=path==url ? 'active' : '' )=title
+
 html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    nav
+      ul 
+        +item("/", "Strona główna")
+        +item("/news", "Aktualności")
+        +item("/quiz", "Quiz")
+        +item("/admin", "Admin")
+
+    div=path 
+
     block content
