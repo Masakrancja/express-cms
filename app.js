@@ -8,8 +8,10 @@ var indexRouter = require("./routes/index");
 var newsRouter = require("./routes/news");
 var quizRouter = require("./routes/quiz");
 var adminRouter = require("./routes/admin");
-
+var cookieSession = require("cookie-session");
+const { keysSessions, maxAgeSession, uri } = require("./config");
 var app = express();
+const mongoose = require("mongoose");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -20,6 +22,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  cookieSession({
+    name: "session",
+    keys: keysSessions,
+    maxAge: maxAgeSession,
+  })
+);
+
+(async () => {
+  await mongoose.connect(uri);
+  const result = mongoose.connection.readyState;
+  if (result === 3) console.log("Rozłączanie z DB");
+  if (result === 2) console.log("Łączenie z DB");
+  if (result === 1) console.log("Połączono z DB");
+  if (result === 0) console.log("Brak połączenia z DB");
+})().catch((err) => console.log(err.message));
 
 app.use((req, res, next) => {
   res.locals.path = req.path;

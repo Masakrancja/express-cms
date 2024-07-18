@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+  h1= title
+  
+  if message !== ''
+    p=message 
+
+  nav 
+    ul 
+      li 
+        a(href='/admin/news/add') Dodaj
+
+  table 
+    tr 
+      th Index 
+      th Tytuł
+      th Data utworzenia
+      th Akcja 
+    each item, index in data
+      tr 
+        td=index+1
+        td=item.title 
+        td=item.created.toLocaleString('pl-PL')
+        td
+          a(href=`/admin/news/delete/${item._id}`) Usuń
